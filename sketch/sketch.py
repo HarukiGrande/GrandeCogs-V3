@@ -50,6 +50,8 @@ class Sketch(BaseCog):
         im = Image.open(sketch)
 
         old_coords = self.config.user(author).coords()
+        print(old_coords)
+        print(new_coords)
         if old_coords == False:
             old_coords = (0, 0)
 
