@@ -43,10 +43,6 @@ class Sketch(BaseCog):
         await ctx.send("Your personal Sketch has been reset!")
 
     async def _make_line(self, author, new_coords, colour, width):
-        if width == 0:
-            await self.config.user(author).coords.set(new_coords)
-            return
-
         sketch = await self.config.user(author).image_data()
         if sketch == False:
             sketch = bundled_data_path(self) / "sketch.png"
@@ -65,7 +61,8 @@ class Sketch(BaseCog):
         canvas = Image.new('RGBA', (600, 400), (255, 0, 0, 0))
         draw = ImageDraw.Draw(canvas)
 
-        draw.line([old_coords, new_coords], fill=colour, width=width)
+        if width != 0:
+            draw.line([old_coords, new_coords], fill=colour, width=width)
         im.paste(canvas, (100, 100), mask=canvas)
 
         img = BytesIO()
