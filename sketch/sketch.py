@@ -32,6 +32,7 @@ class Sketch(BaseCog):
         new_coords = (int(x_coord),  int(y_coord))
         await self._make_line(ctx.author, new_coords, colour, width)
         img = await self.config.user(ctx.author).image_data()
+        img = BytesIO(base64.b64decode(img))
         await ctx.send(file=discord.File(img, "sketch.png"))
 
     @sketch.command()
