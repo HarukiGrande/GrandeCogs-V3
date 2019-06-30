@@ -25,11 +25,11 @@ class Sketch(BaseCog):
     @sketch.command()
     async def draw(self, ctx, x_coord,  y_coord, colour="#000000", width=1):
         """Draw your Sketch"""
-        hex_match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', colour)
+        hex_match = re.search(r"^#(?:[0-9a-fA-F]{3}){1,2}$", colour)
         if not hex_match:
             await ctx.send("Please use a valid hex colour.")
             return
-        new_coords = tuple(x_coord,  y_coord)
+        new_coords = (x_coord,  y_coord)
         await self._make_line(ctx.author, new_coords, colour, width)
         img = await self.config.user(ctx.author).image_data()
         await ctx.send(file=discord.File(img, "sketch.png"))
