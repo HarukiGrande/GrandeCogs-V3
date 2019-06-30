@@ -13,7 +13,7 @@ class Sketch(BaseCog):
         self.config = Config.get_conf(self, identifier=3715378133574, force_registration=True)
         default_user = {
             "image_data": False,
-            "coords": False,
+            "coords": (0, 0),
         }
         self.config.register_user(**default_user)
 
@@ -52,8 +52,6 @@ class Sketch(BaseCog):
         im = Image.open(sketch)
 
         old_coords = await self.config.user(author).coords()
-        if old_coords == False:
-            old_coords = (0, 0)
 
         hex = colour.replace("#", "")
         colour = tuple(int(hex[i:i + 2], 16) for i in (0, 2, 4)) + (255,)
