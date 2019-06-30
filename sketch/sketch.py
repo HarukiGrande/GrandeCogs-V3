@@ -29,7 +29,7 @@ class Sketch(BaseCog):
         if not hex_match:
             await ctx.send("Please use a valid hex colour.")
             return
-        new_coords = (x_coord,  y_coord)
+        new_coords = tuple(x_coord,  y_coord)
         await self._make_line(ctx.author, new_coords, colour, width)
         img = await self.config.user(ctx.author).image_data()
         await ctx.send(file=discord.File(img, "sketch.png"))
@@ -53,8 +53,8 @@ class Sketch(BaseCog):
         if old_coords == False:
             old_coords = (0, 0)
 
-        colour = colour.replace("#", "")
-        colour = tuple(int(colour[i:i + 2], 16) for i in (0, 2, 4)) + (255,)
+        hex = colour.replace("#", "")
+        colour = tuple(int(hex[i:i + 2], 16) for i in (0, 2, 4)) + (255,)
 
         canvas = Image.new('RGBA', (600, 400), (255, 0, 0, 0))
         draw = ImageDraw.Draw(canvas)
