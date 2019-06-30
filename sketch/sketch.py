@@ -29,7 +29,7 @@ class Sketch(BaseCog):
         if not hex_match:
             await ctx.send("Please use a valid hex colour.")
             return
-        new_coords = (x_coord,  y_coord)
+        new_coords = (int(x_coord),  int(y_coord))
         await self._make_line(ctx.author, new_coords, colour, width)
         img = await self.config.user(ctx.author).image_data()
         await ctx.send(file=discord.File(img, "sketch.png"))
