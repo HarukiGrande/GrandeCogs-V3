@@ -41,7 +41,7 @@ class Sketch(BaseCog):
         await self.config.user(ctx.author).coords.set(False)
         await ctx.send("Your personal Sketch has been reset!")
 
-    def _make_line(self, new_coords, colour, width):
+    async def _make_line(self, new_coords, colour, width):
         sketch = await self.config.user(ctx.author).image_data()
         if sketch == False:
             sketch = bundled_data_path(self) / "sketch.png"
