@@ -49,9 +49,7 @@ class Sketch(BaseCog):
             sketch = BytesIO(base64.b64decode(sketch))
         im = Image.open(sketch)
 
-        old_coords = self.config.user(author).coords()
-        print(old_coords)
-        print(new_coords)
+        old_coords = await self.config.user(author).coords()
         if old_coords == False:
             old_coords = (0, 0)
 
