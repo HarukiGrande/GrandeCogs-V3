@@ -23,6 +23,16 @@ class Sketch(BaseCog):
         pass
 
     @sketch.command()
+    async def view(self, ctx):
+        """View your Sketch"""
+        sketch = await self.config.user(ctx.author).image_data()
+        if sketch == False:
+            sketch = bundled_data_path(self) / "sketch.png"
+        else:
+            sketch = BytesIO(base64.b64decode(sketch))
+        await ctx.send(file=discord.File(sketch, "sketch.png"))
+
+    @sketch.command()
     async def draw(self, ctx, x_coord,  y_coord, colour="#000000", width=1):
         """Draw your Sketch"""
         hex_match = re.search(r"^#(?:[0-9a-fA-F]{3}){1,2}$", colour)
