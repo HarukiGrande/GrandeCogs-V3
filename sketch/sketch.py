@@ -30,7 +30,7 @@ class Sketch(BaseCog):
             await ctx.send("Please use a valid hex colour.")
             return
         new_coords = (x_coord,  y_coord)
-        await self._make_line(new_coords, colour, width)
+        await self._make_line(ctx.author, new_coords, colour, width)
         img = await self.config.user(ctx.author).image_data()
         await ctx.send(file=discord.File(img, "sketch.png"))
 
@@ -41,15 +41,15 @@ class Sketch(BaseCog):
         await self.config.user(ctx.author).coords.set(False)
         await ctx.send("Your personal Sketch has been reset!")
 
-    async def _make_line(self, new_coords, colour, width):
-        sketch = await self.config.user(ctx.author).image_data()
+    async def _make_line(self, author, new_coords, colour, width):
+        sketch = await self.config.user(author).image_data()
         if sketch == False:
             sketch = bundled_data_path(self) / "sketch.png"
         else:
             sketch = BytesIO(base64.b64decode(sketch))
         im = Image.open(sketch)
 
-        old_coords = self.config.user(ctx.author).coords()
+        old_coords = self.config.user(author).coords()
         if old_coords == False:
             old_coords = (0, 0)
 
@@ -62,6 +62,6 @@ class Sketch(BaseCog):
         img = BytesIO()
         im.save(img, "png")
         img.seek(0)
-        await self.config.user(ctx.author).image_data.set(base64.b64encode(img.read()).decode())
-        await self.config.user(ctx.author).coords.set(new_coords)
+        await self.config.user(author).image_data.set(base64.b64encode(img.read()).decode())
+        await self.config.user(author).coords.set(new_coords)
         return
