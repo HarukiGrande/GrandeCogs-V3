@@ -158,7 +158,7 @@ class NSFW(BaseCog):
             page = await (await self.session.get(query)).text()
             soup = BeautifulSoup(page, 'html.parser')
             image = soup.find(id="main_image").get("src")
-            await ctx.send(f"http://unlimitedastolfo.works/{image}")
+            await ctx.send(f"http://unlimitedastolfo.works{image}")
         except Exception as e:
             await ctx.send(f":x: **Error:** `{e}`")
 
