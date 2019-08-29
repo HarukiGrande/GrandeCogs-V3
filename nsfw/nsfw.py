@@ -149,6 +149,19 @@ class NSFW(BaseCog):
         except Exception as e:
             await ctx.send(f":x: **Error:** `{e}`")
 
+    @nsfw.command()
+    @commands.is_nsfw()
+    async def astolfo(self, ctx):
+        """Random Image From UnlimitedAstolfo"""
+        try:
+            query = ("http://unlimitedastolfo.works/random_image/view")
+            page = await (await self.session.get(query)).text()
+            soup = BeautifulSoup(page, 'html.parser')
+            image = soup.find(id="main_image").get("href")
+            await ctx.send(image)
+        except Exception as e:
+            await ctx.send(f":x: **Error:** `{e}`")
+
     #@nsfw.command()
     #@commands.guild_only()
     #@commands.is_nsfw()
