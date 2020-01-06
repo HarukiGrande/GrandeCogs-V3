@@ -24,12 +24,12 @@ class WebServer(BaseCog):
         asyncio.gather(runner.cleanup())
 
     @commands.group()
+    @checks.is_owner()
     async def webserver(self, ctx):
         """WebServer"""
         pass
 
     @webserver.command()
-    @checks.is_owner()
     async def upload(self, ctx, folder=None):
         """Upload website files"""
         attachments = ctx.message.attachments
@@ -50,7 +50,6 @@ class WebServer(BaseCog):
         await ctx.send("New files uploaded!")
 
     @webserver.command()
-    @checks.is_owner()
     async def port(self, ctx, port:int):
         """Change webServer port."""
         await self.config.port.set(port)
