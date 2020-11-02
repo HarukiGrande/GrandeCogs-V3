@@ -78,7 +78,7 @@ class NexusHub(BaseCog):
         return em
     
     async def priceembedmaker(self, data):
-        if data["stats"]["current"] == null:
+        if data["stats"]["current"] == None:
             em = discord.Embed(title="​", description=f"**Vendor:** {await self.goldify(data['sellPrice'])}", colour=0xff0000)
             return em
         
