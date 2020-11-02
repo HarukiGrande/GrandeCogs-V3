@@ -31,6 +31,7 @@ class NexusHub(BaseCog):
             items = re.findall(r"[^[]*\[([^]]*)\]", message.content)
             if items:
                 items = list(dict.fromkeys(items))
+                print(items)
                 for item in items:
                     data = await self.itemlookup(item)
                     em = await self.embedmaker(data)
