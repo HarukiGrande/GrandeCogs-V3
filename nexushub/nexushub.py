@@ -18,7 +18,7 @@ class NexusHub(BaseCog):
     @nexushub.command()
     async def item(self, ctx, *, item):
         """Item Lookup"""
-        item = item.replace(" ", "-")
+        item = item.replace(" ", "-").replace("'", "")
         em = await self.itemlookup(item)
         await ctx.send(embed=em)
 
