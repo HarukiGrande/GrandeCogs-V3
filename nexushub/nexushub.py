@@ -36,7 +36,7 @@ class NexusHub(BaseCog):
                     if em == "error":
                         pass
                     else:
-                        await ctx.send(embed=em)
+                        await message.channel.send(embed=em)
     
     async def itemlookup(self, item):
         data = await (await self.session.get(f"https://api.nexushub.co/wow-classic/v1/item/{item}")).json()
