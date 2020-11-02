@@ -84,5 +84,10 @@ class NexusHub(BaseCog):
         
     async def goldify(self, gold):
         gold = str(gold)
-        gold = f"{gold[:-4]}g {gold[-4:-2]}s {gold[-2:]}c"
+        if len(gold) <= 2:
+            gold = f"{gold[-2:]}c"
+        if (len(gold) = 4) or (len(gold) = 3):
+            gold = f"{gold[-4:-2]}s {gold[-2:]}c"
+        if len(gold) >= 5:
+            gold = f"{gold[:-4]}g {gold[-4:-2]}s {gold[-2:]}c"
         return gold
