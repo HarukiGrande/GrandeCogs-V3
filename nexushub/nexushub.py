@@ -26,10 +26,11 @@ class NexusHub(BaseCog):
     async def on_message(self, message):
         if message.guild:
             items = re.search(r"\[(\w+)\]", message.content)
-            for item in items:
-                data = await self.itemlookup(item)
-                em = await self.embedmaker(data)
-                await ctx.send(embed=em)
+            if items
+                for item in items:
+                    data = await self.itemlookup(item)
+                    em = await self.embedmaker(data)
+                    await ctx.send(embed=em)
 
     async def itemlookup(self, item):
         data = await (await self.session.get(f"https://api.nexushub.co/wow-classic/v1/item/{item}")).json()
