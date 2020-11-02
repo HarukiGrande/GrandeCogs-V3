@@ -7,38 +7,44 @@ class NexusHub(BaseCog):
     def __init__(self, bot):
         self.bot = bot
         self.session = aiohttp.ClientSession(loop=self.bot.loop)
-
+    
     @commands.group()
     @commands.guild_only()
     async def nexushub(self, ctx):
         """www.nexushub.co"""
         pass
-
+    
     @nexushub.command()
     async def item(self, ctx, *, item):
         """Item Lookup"""
-        item = item.replace(" ", "-")
+        item = item.replace(" ", "-").replace("'", "")
         data = await self.itemlookup(item)
         em = await self.embedmaker(data)
-        await ctx.send(embed=em)
-
+        if em == "error":
+            await ctx.send(f"Unable to find {item}.")
+        else:
+            await ctx.send(embed=em)
+    
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.guild:
-            items = re.search(r"\[(\w+)\]", message.content)
+            items = re.findall(r"\[(\w+)\]", message.content)
             if items:
                 for item in items:
                     data = await self.itemlookup(item)
                     em = await self.embedmaker(data)
-                    await ctx.send(embed=em)
-
+                    if em == "error":
+                        pass
+                    else:
+                        await ctx.send(embed=em)
+    
     async def itemlookup(self, item):
         data = await (await self.session.get(f"https://api.nexushub.co/wow-classic/v1/item/{item}")).json()
         return data
-        
+    
     async def embedmaker(self, data):
         if "error" in data:
-            return
+            return "error"
         
         tooltip_data = data["tooltip"]
         
