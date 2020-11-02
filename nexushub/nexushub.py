@@ -33,7 +33,7 @@ class NexusHub(BaseCog):
             em.set_footer(text="https://nexushub.co/")
             return em
         tooltip_data = data["tooltip"]
-        em = discord.Embed(title=data["name"], url=f"https://classic.wowhead.com/item={data['itemId']}", colour=color=0xff0000)
+        em = discord.Embed(title=data["name"], url=f"https://classic.wowhead.com/item={data['itemId']}", color=0xff0000)
         em.set_thumbnail(url=data["icon"])
 
         for label in tooltip_data:
