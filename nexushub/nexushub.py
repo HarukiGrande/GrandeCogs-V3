@@ -78,7 +78,7 @@ class NexusHub(BaseCog):
         return em
     
     async def priceembedmaker(self, data):
-        em = discord.Embed(title="​", description=f"**Market Value:** {await self.goldify(data['stats']['current']['marketValue'])}\n**Historical Value:** {await self.goldify(data['stats']['current']['historicalValue'])}\n**Active Auctions:** {await self.goldify(data['stats']['current']['numAuctions'])}\n**Vendor:** {await self.goldify(data['sellPrice'])}", url=f"https://classic.wowhead.com/item={data['itemId']}", colour=0xff0000)
+        em = discord.Embed(title="​", description=f"**Market Value:** {await self.goldify(data['stats']['current']['marketValue'])}\n**Historical Value:** {await self.goldify(data['stats']['current']['historicalValue'])}\n**Active Auctions:** {data['stats']['current']['numAuctions']}\n**Vendor:** {await self.goldify(data['sellPrice'])}", url=f"https://classic.wowhead.com/item={data['itemId']}", colour=0xff0000)
 
         return em
         
