@@ -1,6 +1,5 @@
-import discord
+import discord, aiohttp, re
 from redbot.core import commands
-import aiohttp
 
 BaseCog = getattr(commands, "Cog", object)
 
@@ -12,26 +11,33 @@ class NexusHub(BaseCog):
     @commands.group()
     @commands.guild_only()
     async def nexushub(self, ctx):
-        """https://nexushub.co/"""
+        """www.nexushub.co"""
         pass
 
     @nexushub.command()
     async def item(self, ctx, *, item):
         """Item Lookup"""
-        item = item.replace(" ", "-").replace("'", "")
-        em = await self.itemlookup(item)
+        item = item.replace(" ", "-")
+        data = await self.itemlookup(item)
+        em = await self.embedmaker(data)
         await ctx.send(embed=em)
 
-    #@commands.Cog.listener()
-    #async def on_message(self, message):
-        #print(dir(message))
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.guild:
+            items = re.search(r"\[(\w+)\]", message.content)
+            for item in items:
+                data = await self.itemlookup(item)
+                em = await self.embedmaker(data)
+                await ctx.send(embed=em)
 
     async def itemlookup(self, item):
         data = await (await self.session.get(f"https://api.nexushub.co/wow-classic/v1/item/{item}")).json()
+        return data
+        
+    async def embedmaker(self, data):
         if "error" in data:
-            em = discord.Embed(title=(data["reason"]).title(), color=0xff0000)
-            em.set_footer(text="https://nexushub.co/")
-            return em
+            return
         
         tooltip_data = data["tooltip"]
         
@@ -40,9 +46,7 @@ class NexusHub(BaseCog):
         for label in tooltip_data:
             labels.append(label["label"])
         
-        em = discord.Embed(title=data["name"], description="\n".join(labels[1:-1]), url=f"https://classic.wowhead.com/item={data['itemId']}", color=0xff0000)
+        em = discord.Embed(title=data["name"], description="\n".join(labels[1:-1]), url=f"https://classic.wowhead.com/item={data['itemId']}", colour=(await ctx.embed_colour()))
         em.set_thumbnail(url=data["icon"])
-
-        em.set_footer(text="https://nexushub.co/")
 
         return em
