@@ -17,12 +17,25 @@ class NexusHub(BaseCog):
     @nexushub.command()
     async def item(self, ctx, *, item):
         """Item Lookup"""
-        item = item.replace(" ", "-").replace("'", "")
+        item = item.replace(" ", "-").replace("'", "").replace(",", "")
         data = await self.itemlookup(item)
-        em = await self.embedmaker(data)
+        em = await self.tooltipembedmaker(data)
         if em == "error":
             await ctx.send(f"Unable to find {item}.")
         else:
+            await ctx.send(embed=em)
+    
+    @nexushub.command()
+    async def price(self, ctx, realm, *, item):
+        """Item Lookup"""
+        item = item.replace(" ", "-").replace("'", "").replace(",", "")
+        data = await self.pricelookup(item)
+        em = await self.tooltipembedmaker(data)
+        if em == "error":
+            await ctx.send(f"Unable to find {item}.")
+        else:
+            await ctx.send(embed=em)
+            em = await self.priceembedmaker(data)
             await ctx.send(embed=em)
     
     @commands.Cog.listener()
@@ -32,9 +45,9 @@ class NexusHub(BaseCog):
             if items:
                 items = list(dict.fromkeys(items))
                 for item in items:
-                    item = item.replace(" ", "-").replace("'", "")
+                    item = item.replace(" ", "-").replace("'", "").replace(",", "")
                     data = await self.itemlookup(item)
-                    em = await self.embedmaker(data)
+                    em = await self.tooltipembedmaker(data)
                     if em == "error":
                         pass
                     else:
@@ -44,7 +57,11 @@ class NexusHub(BaseCog):
         data = await (await self.session.get(f"https://api.nexushub.co/wow-classic/v1/item/{item}")).json()
         return data
     
-    async def embedmaker(self, data):
+    async def pricelookup(self, item):
+        data = await (await self.session.get(f"https://api.nexushub.co/wow-classic/v1/item/{item}")).json()
+        return data
+    
+    async def tooltipembedmaker(self, data):
         if "error" in data:
             return "error"
         
@@ -56,6 +73,22 @@ class NexusHub(BaseCog):
             labels.append(label["label"])
         
         em = discord.Embed(title=data["name"], description="\n".join(labels[1:-1]), url=f"https://classic.wowhead.com/item={data['itemId']}", colour=0xff0000)
+        em.set_thumbnail(url=data["icon"])
+
+        return em
+    
+    async def priceembedmaker(self, data):
+        if "error" in data:
+            return "error"
+        
+        price_data = data["stats"]["current"]
+        
+        labels = []
+
+        for label in tooltip_data:
+            labels.append(label["label"])
+        
+        em = discord.Embed(title=data["name"], description=f"**Market Value:** {data['stats']['current']['marketValue']}\n**Historical Value:** {data['stats']['current']['historicalValue']}\n**Active Auctions:** {data['stats']['current']['numAuctions']}\n**Sell Price:** {data['sellPrice']}", url=f"https://classic.wowhead.com/item={data['itemId']}", colour=0xff0000)
         em.set_thumbnail(url=data["icon"])
 
         return em
