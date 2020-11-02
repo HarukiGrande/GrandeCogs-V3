@@ -28,8 +28,9 @@ class NexusHub(BaseCog):
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.guild:
-            items = re.findall(r"\[(\w+)\]", message.content)
+            items = re.findall(r"\[(\w+( \w+)*)\]", message.content)
             if items:
+                items = list(dict.fromkeys(items))
                 for item in items:
                     data = await self.itemlookup(item)
                     em = await self.embedmaker(data)
