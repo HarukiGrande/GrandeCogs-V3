@@ -34,7 +34,7 @@ class NexusHub(BaseCog):
                     data = await self.itemlookup(item)
                     em = await self.embedmaker(data)
                     if em == "error":
-                        print("error")
+                        pass
                     else:
                         await message.channel.send(embed=em)
     
