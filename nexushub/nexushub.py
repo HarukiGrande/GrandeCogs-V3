@@ -31,10 +31,9 @@ class NexusHub(BaseCog):
             items = re.findall(r"[^[]*\[([^]]*)\]", message.content)
             if items:
                 items = list(dict.fromkeys(items))
-                print(items)
                 for item in items:
+                    item = item.replace(" ", "-").replace("'", "")
                     data = await self.itemlookup(item)
-                    print(data)
                     em = await self.embedmaker(data)
                     if em == "error":
                         pass
