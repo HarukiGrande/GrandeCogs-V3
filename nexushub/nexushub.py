@@ -79,7 +79,8 @@ class NexusHub(BaseCog):
     
     async def priceembedmaker(self, data):
         if data["stats"]["current"] == null:
-            return em = discord.Embed(title="​", description=f"**Vendor:** {await self.goldify(data['sellPrice'])}", colour=0xff0000)
+            em = discord.Embed(title="​", description=f"**Vendor:** {await self.goldify(data['sellPrice'])}", colour=0xff0000)
+            return em
         
         em = discord.Embed(title="​", description=f"**Market Value:** {await self.goldify(data['stats']['current']['marketValue'])}\n**Historical Value:** {await self.goldify(data['stats']['current']['historicalValue'])}\n**Active Auctions:** {data['stats']['current']['numAuctions']}\n**Vendor:** {await self.goldify(data['sellPrice'])}", colour=0xff0000)
 
