@@ -37,7 +37,7 @@ class NexusHub(BaseCog):
         em.set_thumbnail(url=data["icon"])
 
         for label in tooltip_data:
-            em.add_field(name="", value=label["label"], inline=False)
+            em.add_field(name=label["label"], value="", inline=False)
 
         em.set_footer(text="https://nexushub.co/")
 
