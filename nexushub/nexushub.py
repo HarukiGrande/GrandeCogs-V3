@@ -29,7 +29,7 @@ class NexusHub(BaseCog):
     async def price(self, ctx, realm, *, item):
         """Item Lookup"""
         item = item.replace(" ", "-").replace("'", "").replace(",", "")
-        data = await self.pricelookup(item)
+        data = await self.pricelookup(realm, item)
         em = await self.tooltipembedmaker(data)
         if em == "error":
             await ctx.send(f"Unable to find {item}.")
@@ -57,8 +57,8 @@ class NexusHub(BaseCog):
         data = await (await self.session.get(f"https://api.nexushub.co/wow-classic/v1/item/{item}")).json()
         return data
     
-    async def pricelookup(self, item):
-        data = await (await self.session.get(f"https://api.nexushub.co/wow-classic/v1/item/{item}")).json()
+    async def pricelookup(self, realm, item):
+        data = await (await self.session.get(f"https://api.nexushub.co/wow-classic/v1/items/{realm}/{item}")).json()
         return data
     
     async def tooltipembedmaker(self, data):
@@ -78,16 +78,6 @@ class NexusHub(BaseCog):
         return em
     
     async def priceembedmaker(self, data):
-        if "error" in data:
-            return "error"
-        
-        price_data = data["stats"]["current"]
-        
-        labels = []
-
-        for label in tooltip_data:
-            labels.append(label["label"])
-        
         em = discord.Embed(title=data["name"], description=f"**Market Value:** {data['stats']['current']['marketValue']}\n**Historical Value:** {data['stats']['current']['historicalValue']}\n**Active Auctions:** {data['stats']['current']['numAuctions']}\n**Sell Price:** {data['sellPrice']}", url=f"https://classic.wowhead.com/item={data['itemId']}", colour=0xff0000)
         em.set_thumbnail(url=data["icon"])
 
