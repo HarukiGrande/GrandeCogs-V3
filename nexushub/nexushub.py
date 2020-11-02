@@ -39,7 +39,7 @@ class NexusHub(BaseCog):
         labels = []
 
         for label in tooltip_data:
-            labels.append(label)
+            labels.append(label["label"])
         
         em.add_field(name="​", value="\n".join(labels), inline=False)
 
