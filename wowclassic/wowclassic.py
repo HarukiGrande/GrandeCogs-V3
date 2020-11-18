@@ -73,14 +73,18 @@ class WowClassic(BaseCog):
         else:
             url = soup.find("a", attrs={"class": "top-results-result-link"})
             
+            print(url)
+            
             url = url.attrs['href']
+            
+            print(url)
 
             driver.get(url)
 
             soup = BeautifulSoup(driver.page_source, "html.parser")
             html_source = soup.find("div", attrs={"class": "wowhead-tooltip"})
             
-            html_source = 'data:text/html;charset=utf-8,' + css_source + str(html_source[0])
+            html_source = 'data:text/html;charset=utf-8,' + css_source + str(html_source)
 
             driver.get(html_source)
 
