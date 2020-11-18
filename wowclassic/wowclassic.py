@@ -22,19 +22,19 @@ class WowClassic(BaseCog):
         pass
         
     @classic.command()
-    async def item(self, ctx, *, item):
-        """Item Lookup"""
-        item = urllib.parse.quote(item)
-        status = await self.wowhead_image_gen(item)
+    async def lookup(self, ctx, *, name):
+        """WoWHead Lookup"""
+        name = urllib.parse.quote(name)
+        status = await self.wowhead_image_gen(name)
         if status == "single":
-            await ctx.send(file=discord.File(cog_data_path(self) / f"{item}.png"))
+            await ctx.send(file=discord.File(cog_data_path(self) / f"{name}.png"))
         else:
-            await ctx.send(f"Unable to find {item}.")
+            await ctx.send(f"Unable to find {name}.")
 
-    async def wowhead_image_gen(self, item):
+    async def wowhead_image_gen(self, name):
         css_source = '<link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/classic/basic.css"><link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/classic/global.css"><link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/themes/classic.css"><link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/classic/tools/book.css">'
 
-        url = f"https://classic.wowhead.com/search?q={item}"
+        url = f"https://classic.wowhead.com/search?q={name}"
 
         chrome_options = Options()
         chrome_options.add_argument("--headless")
@@ -53,15 +53,15 @@ class WowClassic(BaseCog):
             location = element.location;
             size = element.size;
 
-            driver.save_screenshot(str(cog_data_path(self) / f"{item}.png"))
+            driver.save_screenshot(str(cog_data_path(self) / f"{name}.png"))
 
             x = location['x'];
             y = location['y'];
             width = location['x']+size['width'];
             height = location['y']+size['height'];
-            im = Image.open(str(cog_data_path(self) / f"{item}.png"))
+            im = Image.open(str(cog_data_path(self) / f"{name}.png"))
             im = im.crop((int(x), int(y), int(width), int(height)))
-            im.save(str(cog_data_path(self) / f"{item}.png"))
+            im.save(str(cog_data_path(self) / f"{name}.png"))
             driver.quit()
             return "single"
     
