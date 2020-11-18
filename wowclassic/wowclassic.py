@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 from chromedriver_py import binary_path
 import urllib.parse
 from redbot.core.data_manager import cog_data_path
+import os.path
 
 BaseCog = getattr(commands, "Cog", object)
 
@@ -26,11 +27,14 @@ class WowClassic(BaseCog):
         """WoWHead Lookup"""
         async with ctx.typing():
             name = urllib.parse.quote(name)
-            status = await self.wowhead_image_gen(name)
-            if status == "single":
-                await ctx.send(file=discord.File(cog_data_path(self) / f"{name}.png"))
+            if os.path.isfile(str(cog_data_path(self) / f"{name}.png")):
+                await ctx.send(file=discord.File(str(cog_data_path(self) / f"{name}.png")))
             else:
-                await ctx.send(f"Unable to find {name}.")
+                status = await self.wowhead_image_gen(name)
+                if status == "single":
+                    await ctx.send(file=discord.File(str(cog_data_path(self) / f"{name}.png")))
+                else:
+                    await ctx.send(f"Unable to find {name}.")
 
     async def wowhead_image_gen(self, name):
         css_source = '<link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/classic/basic.css"><link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/classic/global.css"><link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/themes/classic.css"><link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/classic/tools/book.css">'
@@ -39,6 +43,8 @@ class WowClassic(BaseCog):
 
         chrome_options = Options()
         chrome_options.add_argument("--headless")
+        chrome_options.add_argument('--incognito')
+        chrome_options.add_argument('--ignore-certificate-errors')
         driver = webdriver.Chrome(chrome_options=chrome_options, executable_path=binary_path)
         driver.get(url)
 
