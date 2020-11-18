@@ -129,8 +129,6 @@ class WowClassic(BaseCog):
                 if "npc" in url:
                     html_source = soup.find_all("table", attrs={"class": "infobox"})
                     
-                    print(html_source)
-                    
                     html_source = 'data:text/html;charset=utf-8,' + css_source + str(html_source[0])
                     
                     driver.get(html_source)
@@ -155,7 +153,7 @@ class WowClassic(BaseCog):
                     except selenium.common.exceptions.NoSuchElementException:
                         return "error"
                 if "quest" in url:
-                    url = url[:1] + '?' + s[1:]
+                    url = url[:1] + '?' + url[1:]
                     url = f"https://classicdb.com{url}"
                     
                     html_source = soup.find_all("div", attrs={"class": "text"})
