@@ -1,0 +1,69 @@
+import discord, aiohttp, re, selenium
+from redbot.core import commands
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from PIL import Image
+from bs4 import BeautifulSoup
+from chromedriver_py import binary_path
+import urllib.parse
+from redbot.core.data_manager import cog_data_path
+
+BaseCog = getattr(commands, "Cog", object)
+
+class WowClassic(BaseCog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.session = aiohttp.ClientSession(loop=self.bot.loop)
+        
+    @commands.group()
+    @commands.guild_only()
+    async def classic(self, ctx):
+        """WoW Classic"""
+        pass
+        
+    @classic.command()
+    async def item(self, ctx, *, item):
+        """Item Lookup"""
+        item = urllib.parse.quote(item)
+        status = await self.wowhead_image_gen(item)
+        if status == "single":
+            await ctx.send(file=discord.File(cog_data_path(self) / f"{item}.png"))
+        else:
+            await ctx.send(f"Unable to find {item}.")
+
+    async def wowhead_image_gen(self, item):
+        css_source = '<link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/classic/basic.css"><link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/classic/global.css"><link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/themes/classic.css"><link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/classic/tools/book.css">'
+
+        url = f"https://classic.wowhead.com/search?q={item}"
+
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        driver = webdriver.Chrome(chrome_options=chrome_options, executable_path=binary_path)
+        driver.get(url)
+
+        soup = BeautifulSoup(driver.page_source, "html.parser")
+        html_source = soup.find("div", attrs={"class": "wowhead-tooltip"})
+
+        html_source = 'data:text/html;charset=utf-8,' + css_source + str(html_source)
+
+        driver.get(html_source)
+
+        try:
+            element = driver.find_element_by_tag_name("table");
+            location = element.location;
+            size = element.size;
+
+            screenshot = driver.get_screenshot_as_png()
+
+            x = location['x'];
+            y = location['y'];
+            width = location['x']+size['width'];
+            height = location['y']+size['height'];
+            im = Image.open(screenshot)
+            im = im.crop((int(x), int(y), int(width), int(height)))
+            im.save(cog_data_path(self) / f"{item}.png")
+            driver.quit()
+            return "single"
+    
+        except selenium.common.exceptions.NoSuchElementException:
+            return "no"
