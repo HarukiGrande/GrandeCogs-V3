@@ -68,7 +68,7 @@ class WowClassic(BaseCog):
         driver.get(url)
 
         soup = BeautifulSoup(driver.page_source, "html.parser")
-        html_source = soup.find("div", attrs={"class": "wowhead-tooltip-width-320"})
+        html_source = soup.find("div", attrs={"class": "wowhead-tooltip"})
         
         if html_source:
 
@@ -103,7 +103,7 @@ class WowClassic(BaseCog):
             driver.get(url)
 
             soup = BeautifulSoup(driver.page_source, "html.parser")
-            html_source = soup.find("div", attrs={"class": "wowhead-tooltip-width-320"})
+            html_source = soup.find("div", attrs={"class": "wowhead-tooltip"})
             
             if html_source:
                 html_source = 'data:text/html;charset=utf-8,' + css_source + str(html_source)
