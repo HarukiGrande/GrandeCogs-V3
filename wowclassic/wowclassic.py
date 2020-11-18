@@ -24,12 +24,13 @@ class WowClassic(BaseCog):
     @classic.command()
     async def lookup(self, ctx, *, name):
         """WoWHead Lookup"""
-        name = urllib.parse.quote(name)
-        status = await self.wowhead_image_gen(name)
-        if status == "single":
-            await ctx.send(file=discord.File(cog_data_path(self) / f"{name}.png"))
-        else:
-            await ctx.send(f"Unable to find {name}.")
+        async with ctx.typing():
+            name = urllib.parse.quote(name)
+            status = await self.wowhead_image_gen(name)
+            if status == "single":
+                await ctx.send(file=discord.File(cog_data_path(self) / f"{name}.png"))
+            else:
+                await ctx.send(f"Unable to find {name}.")
 
     async def wowhead_image_gen(self, name):
         css_source = '<link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/classic/basic.css"><link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/classic/global.css"><link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/themes/classic.css"><link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/classic/tools/book.css">'
