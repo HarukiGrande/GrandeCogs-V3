@@ -35,6 +35,21 @@ class WowClassic(BaseCog):
                     await ctx.send(file=discord.File(str(cog_data_path(self) / f"{name}.png")))
                 else:
                     await ctx.send(f"Unable to find {name}.")
+    
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.guild:
+            names = re.findall(r"[^[]*\[([^]]*)\]", message.content)
+            if names:
+                names = list(dict.fromkeys(names))
+                for name in names:
+                    name = urllib.parse.quote(name)
+                    if os.path.isfile(str(cog_data_path(self) / f"{name}.png")):
+                        await ctx.send(file=discord.File(str(cog_data_path(self) / f"{name}.png")))
+                    else:
+                        status = await self.wowhead_image_gen(name)
+                        if status == "single":
+                            await ctx.send(file=discord.File(str(cog_data_path(self) / f"{name}.png")))
 
     async def wowhead_image_gen(self, name):
         css_source = '<link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/classic/basic.css"><link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/classic/global.css"><link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/themes/classic.css"><link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/classic/tools/book.css">'
