@@ -133,7 +133,7 @@ class WowClassic(BaseCog):
                 driver.get(html_source)
 
                 try:
-                    element = driver.find_element_by_tag_name("table");
+                    element = driver.find_element_by_tag_name("tbody");
                     location = element.location;
                     size = element.size;
 
