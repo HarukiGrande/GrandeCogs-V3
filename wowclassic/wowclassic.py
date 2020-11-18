@@ -45,7 +45,7 @@ class WowClassic(BaseCog):
                 for name in names:
                     name = urllib.parse.quote(name)
                     if os.path.isfile(str(cog_data_path(self) / f"{name}.png")):
-                        await ctx.send(file=discord.File(str(cog_data_path(self) / f"{name}.png")))
+                        await message.channel.send(file=discord.File(str(cog_data_path(self) / f"{name}.png")))
                     else:
                         status = await self.wowhead_image_gen(name)
                         if status == "single":
