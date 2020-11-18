@@ -149,5 +149,5 @@ class WowClassic(BaseCog):
                     driver.quit()
                     return "single"
     
-                    except selenium.common.exceptions.NoSuchElementException:
-                        return "error"
+                except selenium.common.exceptions.NoSuchElementException:
+                    return "error"
