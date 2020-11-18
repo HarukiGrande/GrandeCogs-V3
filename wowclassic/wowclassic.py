@@ -73,11 +73,7 @@ class WowClassic(BaseCog):
         else:
             url = soup.find("a", attrs={"class": "top-results-result-link"})
             
-            print(url)
-            
-            url = url.attrs['href']
-            
-            print(url)
+            url = f"https://classic.wowhead.com{url.attrs['href']}"
 
             driver.get(url)
 
