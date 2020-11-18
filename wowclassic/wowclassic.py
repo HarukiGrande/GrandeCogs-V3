@@ -126,28 +126,59 @@ class WowClassic(BaseCog):
                 except selenium.common.exceptions.NoSuchElementException:
                     return "error"
             else:
-                html_source = soup.find_all("table", attrs={"class": "infobox-inner-table"})
+                if "npc" in url:
+                    html_source = soup.find_all("div", attrs={"class": "infobox"})
                     
-                html_source = 'data:text/html;charset=utf-8,' + css_source + str(html_source[0])
+                    html_source = 'data:text/html;charset=utf-8,' + css_source + str(html_source[0])
                     
-                driver.get(html_source)
+                    driver.get(html_source)
 
-                try:
-                    element = driver.find_element_by_tag_name("tbody");
-                    location = element.location;
-                    size = element.size;
+                    try:
+                        element = driver.find_element_by_tag_name("tbody");
+                        location = element.location;
+                        size = element.size;
 
-                    driver.save_screenshot(str(cog_data_path(self) / f"{name}.png"))
+                        driver.save_screenshot(str(cog_data_path(self) / f"{name}.png"))
 
-                    x = location['x'];
-                    y = location['y'];
-                    width = location['x']+size['width'];
-                    height = location['y']+size['height'];
-                    im = Image.open(str(cog_data_path(self) / f"{name}.png"))
-                    im = im.crop((int(x), int(y), int(width), int(height)))
-                    im.save(str(cog_data_path(self) / f"{name}.png"))
-                    driver.quit()
-                    return "single"
+                        x = location['x'];
+                        y = location['y'];
+                        width = location['x']+size['width'];
+                        height = location['y']+size['height'];
+                        im = Image.open(str(cog_data_path(self) / f"{name}.png"))
+                        im = im.crop((int(x), int(y), int(width), int(height)))
+                        im.save(str(cog_data_path(self) / f"{name}.png"))
+                        driver.quit()
+                        return "single"
     
-                except selenium.common.exceptions.NoSuchElementException:
-                    return "error"
+                    except selenium.common.exceptions.NoSuchElementException:
+                        return "error"
+                if "quest" in url:
+                    url = url.attrs['href']
+                    url = url[:1] + '?' + s[1:]
+                    url = f"https://classicdb.com{url}"
+                    
+                    html_source = soup.find_all("div", attrs={"class": "text"})
+                    
+                    html_source = 'data:text/html;charset=utf-8,' + css_source + str(html_source[0])
+                    
+                    driver.get(html_source)
+
+                    try:
+                        element = driver.find_element_by_tag_name("tbody");
+                        location = element.location;
+                        size = element.size;
+
+                        driver.save_screenshot(str(cog_data_path(self) / f"{name}.png"))
+
+                        x = location['x'];
+                        y = location['y'];
+                        width = location['x']+size['width'];
+                        height = location['y']+size['height'];
+                        im = Image.open(str(cog_data_path(self) / f"{name}.png"))
+                        im = im.crop((int(x), int(y), int(width), int(height)))
+                        im.save(str(cog_data_path(self) / f"{name}.png"))
+                        driver.quit()
+                        return "single"
+    
+                    except selenium.common.exceptions.NoSuchElementException:
+                        return "error"
