@@ -128,7 +128,7 @@ class WowClassic(BaseCog):
             else:
                 html_source = soup.find_all("table", attrs={"class": "infobox"})
                     
-                html_source = 'data:text/html;charset=utf-8,' + css_source + str(html_source[0]) + str(html_source[1])
+                html_source = 'data:text/html;charset=utf-8,' + css_source + str(html_source[0])
                     
                 driver.get(html_source)
 
