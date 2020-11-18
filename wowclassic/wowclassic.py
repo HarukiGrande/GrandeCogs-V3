@@ -53,15 +53,15 @@ class WowClassic(BaseCog):
             location = element.location;
             size = element.size;
 
-            driver.save_screenshot(cog_data_path(self) / f"{item}.png")
+            driver.save_screenshot(str(cog_data_path(self) / f"{item}.png"))
 
             x = location['x'];
             y = location['y'];
             width = location['x']+size['width'];
             height = location['y']+size['height'];
-            im = Image.open(cog_data_path(self) / f"{item}.png")
+            im = Image.open(str(cog_data_path(self) / f"{item}.png"))
             im = im.crop((int(x), int(y), int(width), int(height)))
-            im.save(cog_data_path(self) / f"{item}.png")
+            im.save(str(cog_data_path(self) / f"{item}.png"))
             driver.quit()
             return "single"
     
