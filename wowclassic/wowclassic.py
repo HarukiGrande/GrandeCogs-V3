@@ -44,27 +44,62 @@ class WowClassic(BaseCog):
 
         soup = BeautifulSoup(driver.page_source, "html.parser")
         html_source = soup.find("div", attrs={"class": "wowhead-tooltip"})
+        
+        if html_source:
 
-        html_source = 'data:text/html;charset=utf-8,' + css_source + str(html_source)
+            html_source = 'data:text/html;charset=utf-8,' + css_source + str(html_source)
 
-        driver.get(html_source)
+            driver.get(html_source)
 
-        try:
-            element = driver.find_element_by_tag_name("table");
-            location = element.location;
-            size = element.size;
+            try:
+                element = driver.find_element_by_tag_name("table");
+                location = element.location;
+                size = element.size;
 
-            driver.save_screenshot(str(cog_data_path(self) / f"{name}.png"))
+                driver.save_screenshot(str(cog_data_path(self) / f"{name}.png"))
 
-            x = location['x'];
-            y = location['y'];
-            width = location['x']+size['width'];
-            height = location['y']+size['height'];
-            im = Image.open(str(cog_data_path(self) / f"{name}.png"))
-            im = im.crop((int(x), int(y), int(width), int(height)))
-            im.save(str(cog_data_path(self) / f"{name}.png"))
-            driver.quit()
-            return "single"
+                x = location['x'];
+                y = location['y'];
+                width = location['x']+size['width'];
+                height = location['y']+size['height'];
+                im = Image.open(str(cog_data_path(self) / f"{name}.png"))
+                im = im.crop((int(x), int(y), int(width), int(height)))
+                im.save(str(cog_data_path(self) / f"{name}.png"))
+                driver.quit()
+                return "single"
     
-        except selenium.common.exceptions.NoSuchElementException:
-            return "no"
+            except selenium.common.exceptions.NoSuchElementException:
+                return "error"
+        else:
+            url = soup.find("a", attrs={"class": "top-results-result-link"})
+            
+            url = url.href
+
+            driver.get(url)
+
+            soup = BeautifulSoup(driver.page_source, "html.parser")
+            html_source = soup.find("div", attrs={"class": "wowhead-tooltip"})
+            
+            html_source = 'data:text/html;charset=utf-8,' + css_source + str(html_source[0])
+
+            driver.get(html_source)
+
+            try:
+                element = driver.find_element_by_tag_name("table");
+                location = element.location;
+                size = element.size;
+
+                driver.save_screenshot(str(cog_data_path(self) / f"{name}.png"))
+
+                x = location['x'];
+                y = location['y'];
+                width = location['x']+size['width'];
+                height = location['y']+size['height'];
+                im = Image.open(str(cog_data_path(self) / f"{name}.png"))
+                im = im.crop((int(x), int(y), int(width), int(height)))
+                im.save(str(cog_data_path(self) / f"{name}.png"))
+                driver.quit()
+                return "single"
+    
+            except selenium.common.exceptions.NoSuchElementException:
+                return "error"
