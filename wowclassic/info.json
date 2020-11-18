@@ -1,0 +1,10 @@
+{
+    "author" : ["Grande#0001"],
+    "bot_version" : [3,0,0],
+    "description" : "WowClassic",
+    "hidden" : false,
+    "install_msg" : "Thank you for adding this cog!",
+    "short" : "WowClassic",
+    "requirements": ["selenium", "chromedriver-py", "bs4", "pillow"],
+    "tags" : ["wow", "classic"]
+}
