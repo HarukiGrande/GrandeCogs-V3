@@ -16,7 +16,7 @@ BaseCog = getattr(commands, "Cog", object)
 class WowClassic(BaseCog):
     def __init__(self, bot):
         self.bot = bot
-        
+
     @commands.group()
     @commands.guild_only()
     async def classic(self, ctx):
@@ -37,7 +37,9 @@ class WowClassic(BaseCog):
                         return await ctx.send(item["tooltip"])
         except FileNotFoundError:
             return await ctx.send("oops")
-        await ctx.send(f"Could not find {query}.") 
+        await ctx.send(f"Could not find {query}.")
+
+"""
 
     @classic.command()
     async def lookup(self, ctx, *, name):
@@ -169,3 +171,4 @@ class WowClassic(BaseCog):
                 #except selenium.common.exceptions.NoSuchElementException:
                     #return "error"
                 return "error"
+"""
