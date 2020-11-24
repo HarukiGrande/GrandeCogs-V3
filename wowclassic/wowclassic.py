@@ -33,7 +33,7 @@ class WowClassic(BaseCog):
                 data = json.loads(f.read())
                 for item in data:
                     data_names.append(item["name"])
-                return await ctx.send(dir(process.extractOne(query, data_names)))
+                return await ctx.send(process.extractOne(query, data_names).index())
         except FileNotFoundError:
             return await ctx.send("oops")
         await ctx.send(f"Could not find {query}.") 
