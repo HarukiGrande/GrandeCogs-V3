@@ -1,4 +1,4 @@
-import discord, aiohttp, re, selenium
+import discord, aiohttp, re, selenium, json
 from redbot.core import commands
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -7,11 +7,9 @@ from bs4 import BeautifulSoup
 from chromedriver_py import binary_path
 import urllib.parse
 from redbot.core.data_manager import cog_data_path
+from redbot.core.data_manager import bundled_data_path
 import os.path
-import logging
-from selenium.webdriver.remote.remote_connection import LOGGER
-
-LOGGER.setLevel(logging.WARNING)
+from fuzzywuzzy import process
 
 BaseCog = getattr(commands, "Cog", object)
 
@@ -25,7 +23,22 @@ class WowClassic(BaseCog):
     async def classic(self, ctx):
         """WoW Classic"""
         pass
-        
+    
+    @classic.command()
+    async def tooltip(self, ctx, *, query):
+        """Tooltip data search"""
+        data_names = []
+        file_path = bundled_data_path(self) / "data.json"
+        try:
+            with file_path.open("rt") as f:
+                data = json.loads(data)
+                for item in data:
+                    data_names.append(item["name"])
+                return await ctx.send(process.extractOne(query, data_names))
+        except FileNotFoundError:
+            return await ctx.send("oops")
+        await ctx.send(f"Could not find {query}.") 
+
     @classic.command()
     async def lookup(self, ctx, *, name):
         """WoWHead Lookup"""
