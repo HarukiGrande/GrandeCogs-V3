@@ -31,7 +31,7 @@ class WowClassic(BaseCog):
         file_path = bundled_data_path(self) / "data.json"
         try:
             with file_path.open("rt") as f:
-                data = json.loads(data)
+                data = json.loads(f.read())
                 for item in data:
                     data_names.append(item["name"])
                 return await ctx.send(process.extractOne(query, data_names))
