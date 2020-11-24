@@ -26,7 +26,7 @@ class WowClassic(BaseCog):
                 match = process.extractOne(query, data_names)[0]
                 for item in data:
                     if item["name"] == match:
-                        return await ctx.send(item["tooltip"])
+                        return await ctx.send(f"{item["tooltip"]} - {len(data_names)}")
         except FileNotFoundError:
             return await ctx.send("oops")
         await ctx.send(f"Could not find {query}.")
