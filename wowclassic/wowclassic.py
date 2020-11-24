@@ -80,6 +80,6 @@ class WowClassic(BaseCog):
         height = location['y']+size['height'];
         im = Image.open(image_path)
         im = im.crop((int(x), int(y), int(width), int(height)))
-        im.save(image_path, optimize=True, quality=5)
+        im.save(image_path, optimize=True)
         driver.quit()
         return image_path
