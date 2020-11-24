@@ -16,17 +16,17 @@ class WowClassic(BaseCog):
         pass
     
     @classic.command()
-    async def tooltip(self, ctx, *, query):
+    async def search(self, ctx, *, query):
         """Tooltip data search"""
+        item = await self._name_lookup(query)
+        await ctx.send(item)
+        
+    async def _name_lookup(self, query):
         file_path = bundled_data_path(self) / "data.json"
-        try:
-            with file_path.open("rt") as f:
-                data = json.loads(f.read())
-                data_names = [item.get("name") for item in data]
-                match = process.extractOne(query, data_names)[0]
-                for item in data:
-                    if item["name"] == match:
-                        return await ctx.send(f"{item['tooltip']} - {len(data_names)}")
-        except FileNotFoundError:
-            return await ctx.send("oops")
-        await ctx.send(f"Could not find {query}.")
+        with file_path.open("rt") as f:
+            data = json.loads(f.read())
+            data_names = [item.get("name") for item in data]
+            match = process.extractOne(query, data_names)[0]
+            for item in data:
+                if item["name"] == match:
+                    return item
