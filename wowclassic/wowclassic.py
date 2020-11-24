@@ -31,7 +31,7 @@ class WowClassic(BaseCog):
         """Tooltip data search"""
         item = await self._name_lookup(query)
         image_path = str(cog_data_path(self) / f"{item['itemId']}.png")
-        if os.path.isfile(image_path):
+        if path.isfile(image_path):
             await ctx.send(file=discord.File(image_path))
         else:
             image_path = await self._generate_tooltip(item["itemId"])
