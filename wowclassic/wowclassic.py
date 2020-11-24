@@ -68,7 +68,7 @@ class WowClassic(BaseCog):
         tooltip_data = soup.find("div", attrs={"class": "wowhead-tooltip"})
         complete_tooltip = f"data:text/html;charset=utf-8,{css}{tooltip_data}"
 
-        driver.get(html_source)
+        driver.get(complete_tooltip)
 
         element = driver.find_element_by_tag_name("table");
         location = element.location;
