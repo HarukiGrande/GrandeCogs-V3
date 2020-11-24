@@ -1,4 +1,4 @@
-import discord, aiohttp, re, selenium, json
+import discord, re, selenium, json
 from redbot.core import commands
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -16,7 +16,6 @@ BaseCog = getattr(commands, "Cog", object)
 class WowClassic(BaseCog):
     def __init__(self, bot):
         self.bot = bot
-        self.session = aiohttp.ClientSession(loop=self.bot.loop)
         
     @commands.group()
     @commands.guild_only()
@@ -34,7 +33,7 @@ class WowClassic(BaseCog):
                 data = json.loads(f.read())
                 for item in data:
                     data_names.append(item["name"])
-                return await ctx.send(process.extractOne(query, data_names))
+                return await ctx.send(dir(process.extractOne(query, data_names)))
         except FileNotFoundError:
             return await ctx.send("oops")
         await ctx.send(f"Could not find {query}.") 
