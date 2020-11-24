@@ -37,10 +37,6 @@ class WowClassic(BaseCog):
             image_path = await self._generate_tooltip(item["itemId"])
             await ctx.send(file=discord.File(image_path))
 
-    async def _request_soup(self, url):
-        async with self.session.request("GET", url) as response:
-            return BeautifulSoup(await response.text(), "html.parser")
-
     async def _name_lookup(self, query):
         file_path = bundled_data_path(self) / "data.json"
         with file_path.open("rt") as f:
@@ -63,8 +59,10 @@ class WowClassic(BaseCog):
         chrome_options.add_argument('--incognito')
         chrome_options.add_argument('--ignore-certificate-errors')
         driver = webdriver.Chrome(chrome_options=chrome_options, executable_path=binary_path, service_log_path="NUL")
+        
+        driver.get(url)
 
-        soup = await self._request_soup(url)
+        soup = BeautifulSoup(driver.page_source, "html.parser")
         tooltip_data = soup.find("div", attrs={"class": "wowhead-tooltip"})
         complete_tooltip = f"data:text/html;charset=utf-8,{css}{tooltip_data}"
 
