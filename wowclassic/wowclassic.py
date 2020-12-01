@@ -56,6 +56,7 @@ class WowClassic(BaseCog):
                     if item == "no match":
                         continue
                     image_path = str(cog_data_path(self) / f"{item['itemId']}.png")
+                    url = f"https://classic.wowhead.com/item={item['itemId']}"
                     if path.isfile(image_path):
                         await message.channel.send(f"Phase {item['contentPhase']} - {url}", file=discord.File(image_path))
                     else:
