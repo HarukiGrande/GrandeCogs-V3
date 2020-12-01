@@ -17,8 +17,9 @@ class WowClassic(BaseCog):
         self.bot = bot
         chrome_options = Options()
         chrome_options.add_argument("--headless")
-        chrome_options.add_argument('--incognito')
-        chrome_options.add_argument('--ignore-certificate-errors')
+        chrome_options.add_argument("--incognito")
+        chrome_options.add_argument("window-size=1920,1080")
+        chrome_options.add_argument("--ignore-certificate-errors")
         self.driver = webdriver.Chrome(options=chrome_options, executable_path=binary_path)
 
     def cog_unload(self):
