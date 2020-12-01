@@ -103,6 +103,15 @@ class WowClassic(BaseCog):
         width = location['x']+size['width'];
         height = location['y']+size['height'];
         im = Image.open(image_path)
+        im = im.convert("RGBA")
         im = im.crop((int(x), int(y), int(width), int(height)))
+        datas = im.getdata()
+        newData = []
+        for item in datas:
+            if item[0] == 0 and item[1] == 0 and item[2] == 0:
+                newData.append((0, 0, 0, 0))
+            else:
+                newData.append(item)
+        im.putdata(newData)
         im.save(image_path, optimize=True)
         return image_path
