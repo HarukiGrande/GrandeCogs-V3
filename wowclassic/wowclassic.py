@@ -80,7 +80,7 @@ class WowClassic(BaseCog):
     async def _generate_tooltip(self, item_id):
         image_path = str(cog_data_path(self) / f"{item_id}.png")
         
-        css = '<link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/classic/basic.css"><link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/classic/global.css"><link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/themes/classic.css"><link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/classic/tools/book.css">'
+        css = '<link rel="stylesheet" type="text/css" href="https://wow.zamimg.com/css/classic/basic.css"><style type="text/css">body {background-color: black}</style>'
 
         url = f"https://classic.wowhead.com/item={item_id}"
         
