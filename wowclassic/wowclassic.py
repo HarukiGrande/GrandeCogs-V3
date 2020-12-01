@@ -42,10 +42,10 @@ class WowClassic(BaseCog):
         image_path = str(cog_data_path(self) / f"{item['itemId']}.png")
         url = f"https://classic.wowhead.com/item={item['itemId']}"
         if path.isfile(image_path):
-            await ctx.send(f"Phase {item['contentPhase']} - <{url}>", file=discord.File(image_path))
+            await ctx.send(f"<{url}>", file=discord.File(image_path))
         else:
             image_path = await self._generate_tooltip(item["itemId"])
-            await ctx.send(f"Phase {item['contentPhase']} - <{url}>", file=discord.File(image_path))
+            await ctx.send(f"<{url}>", file=discord.File(image_path))
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -60,10 +60,10 @@ class WowClassic(BaseCog):
                     image_path = str(cog_data_path(self) / f"{item['itemId']}.png")
                     url = f"https://classic.wowhead.com/item={item['itemId']}"
                     if path.isfile(image_path):
-                        await message.channel.send(f"Phase {item['contentPhase']} - <{url}>", file=discord.File(image_path))
+                        await message.channel.send(f"<{url}>", file=discord.File(image_path))
                     else:
                         image_path = await self._generate_tooltip(item["itemId"])
-                        await message.channel.send(f"Phase {item['contentPhase']} - <{url}>", file=discord.File(image_path))
+                        await message.channel.send(f"<{url}>", file=discord.File(image_path))
 
     async def _name_lookup(self, query):
         file_path = bundled_data_path(self) / "data.json"
