@@ -1,4 +1,4 @@
-import discord, json
+import discord, json, re
 from redbot.core import commands
 from redbot.core.data_manager import bundled_data_path
 from redbot.core.data_manager import cog_data_path
@@ -43,6 +43,24 @@ class WowClassic(BaseCog):
         else:
             image_path = await self._generate_tooltip(item["itemId"])
             await ctx.send(file=discord.File(image_path))
+    
+    @commands.Cog.listener()
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    async def on_message(self, message):
+        if message.guild:
+            items = re.findall(r"[^[]*\[([^]]*)\]", message.content)
+            if items:
+                items = list(dict.fromkeys(items))[:3]
+                for item in items:
+                    item = await self._name_lookup(item)
+                    if item == "no match":
+                        continue
+                    image_path = str(cog_data_path(self) / f"{item['itemId']}.png")
+                    if path.isfile(image_path):
+                        await message.channel.send(file=discord.File(image_path))
+                    else:
+                        image_path = await self._generate_tooltip(item["itemId"])
+                        await message.channel.send(file=discord.File(image_path))
 
     async def _name_lookup(self, query):
         file_path = bundled_data_path(self) / "data.json"
