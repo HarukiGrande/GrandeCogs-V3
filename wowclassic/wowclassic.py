@@ -45,7 +45,6 @@ class WowClassic(BaseCog):
             await ctx.send(file=discord.File(image_path))
     
     @commands.Cog.listener()
-    @commands.cooldown(1, 10, commands.BucketType.user)
     async def on_message(self, message):
         if message.guild:
             items = re.findall(r"[^[]*\[([^]]*)\]", message.content)
