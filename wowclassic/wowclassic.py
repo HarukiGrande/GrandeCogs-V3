@@ -18,6 +18,8 @@ class WowClassic(BaseCog):
         chrome_options = Options()
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--incognito")
+        chrome_options.add_argument("--start-maximized")
+        chrome_options.add_argument("window-size=1920x1080")
         chrome_options.add_argument("--ignore-certificate-errors")
         self.driver = webdriver.Chrome(options=chrome_options, executable_path=binary_path)
 
@@ -84,7 +86,6 @@ class WowClassic(BaseCog):
 
         url = f"https://classic.wowhead.com/item={item_id}"
         
-        self.driver.set_window_size(1920, 1080)
         self.driver.get(url)
 
         soup = BeautifulSoup(self.driver.page_source, "html.parser")
