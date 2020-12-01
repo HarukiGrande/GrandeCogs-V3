@@ -34,6 +34,9 @@ class WowClassic(BaseCog):
     async def search(self, ctx, *, query):
         """Tooltip data search"""
         item = await self._name_lookup(query)
+        if item == "no match":
+            await ctx.send(":x: Unable to find an item with that name.")
+            return
         image_path = str(cog_data_path(self) / f"{item['itemId']}.png")
         if path.isfile(image_path):
             await ctx.send(file=discord.File(image_path))
@@ -52,6 +55,8 @@ class WowClassic(BaseCog):
                 for item in data:
                     if item["name"] == match:
                         return item
+            else:
+                return "no match"
 
     async def _generate_tooltip(self, item_id):
         image_path = str(cog_data_path(self) / f"{item_id}.png")
