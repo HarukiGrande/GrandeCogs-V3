@@ -1,5 +1,5 @@
 import discord, json, re
-from redbot.core import commands
+from redbot.core import commands, Config
 from redbot.core.data_manager import bundled_data_path
 from redbot.core.data_manager import cog_data_path
 from selenium import webdriver
@@ -15,6 +15,7 @@ BaseCog = getattr(commands, "Cog", object)
 class WowClassic(BaseCog):
     def __init__(self, bot):
         self.bot = bot
+        # Webdriver
         chrome_options = Options()
         chrome_options.addArguments("--no-sandbox")
         chrome_options.add_argument("--headless")
@@ -26,6 +27,10 @@ class WowClassic(BaseCog):
         chrome_options.add_argument("window-size=1920x1080")
         chrome_options.add_argument("--ignore-certificate-errors")
         self.driver = webdriver.Chrome(options=chrome_options, executable_path=binary_path)
+        # Config
+        self.config = Config.get_conf(self, identifier=3794294739172, force_registration=True)
+        default_channel = {"toggle": False}
+        self.config.register_channel(**default_channel)
 
     def cog_unload(self):
         self.driver.quit()
@@ -51,9 +56,21 @@ class WowClassic(BaseCog):
             image_path = await self._generate_tooltip(item["itemId"])
             await ctx.send(f"<{url}>", file=discord.File(image_path))
 
+    @classic.command()
+    async def toggle(self, ctx):
+        """Toggle command-less queries in current channel"""
+        current = await self.config.channel(ctx.channel).toggle()
+        if current == False:
+            await self.config.channel(ctx.channel).toggle.set(True)
+            await ctx.send(f"{ctx.channel.mention} has been enabled.")
+        else:
+            await self.config.channel(ctx.channel).toggle.set(False)
+            await ctx.send(f"{ctx.channel.mention} has been disable.")
+
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.guild:
+        current = await self.config.channel(message.channel).toggle()
+        if current == True:
             items = re.findall(r"[^[]*\[([^]]*)\]", message.content)
             if items:
                 items = list(dict.fromkeys(items))[:3]
