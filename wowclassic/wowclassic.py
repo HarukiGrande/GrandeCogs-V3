@@ -17,13 +17,13 @@ class WowClassic(BaseCog):
         self.bot = bot
         # Webdriver
         chrome_options = Options()
-        chrome_options.addArguments("--no-sandbox")
+        chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--incognito")
-        chrome_options.addArguments("start-maximized")
-        chrome_options.addArguments("disable-infobars")
-        chrome_options.addArguments("--disable-extensions")
-        chrome_options.addArguments("--disable-dev-shm-usage")
+        chrome_options.add_argument("start-maximized")
+        chrome_options.add_argument("disable-infobars")
+        chrome_options.add_argument("--disable-extensions")
+        chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("window-size=1920x1080")
         chrome_options.add_argument("--ignore-certificate-errors")
         self.driver = webdriver.Chrome(options=chrome_options, executable_path=binary_path)
