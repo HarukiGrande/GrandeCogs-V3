@@ -36,7 +36,6 @@ class WowClassic(BaseCog):
         self.bot.loop.create_task(self.session.close())
 
     @commands.group()
-    @checks.mod_or_permissions(administrator=True)
     @commands.guild_only()
     async def classic(self, ctx):
         """WoW Classic"""
