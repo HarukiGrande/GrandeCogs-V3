@@ -66,7 +66,7 @@ class WowClassic(BaseCog):
             await ctx.send(f"{ctx.channel.mention} has been enabled.")
         else:
             await self.config.channel(ctx.channel).toggle.set(False)
-            await ctx.send(f"{ctx.channel.mention} has been disable.")
+            await ctx.send(f"{ctx.channel.mention} has been disabled.")
 
     @commands.Cog.listener()
     async def on_message(self, message):
