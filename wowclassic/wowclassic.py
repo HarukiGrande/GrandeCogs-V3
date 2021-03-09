@@ -1,10 +1,9 @@
-import discord, json, re
+import discord, json, re, aiohttp, chromedriver_binary
 from redbot.core import commands, Config
 from redbot.core.data_manager import bundled_data_path
 from redbot.core.data_manager import cog_data_path
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-import chromedriver_binary
 from fuzzywuzzy import process
 from bs4 import BeautifulSoup
 from PIL import Image
@@ -31,9 +30,12 @@ class WowClassic(BaseCog):
         self.config = Config.get_conf(self, identifier=3794294739172, force_registration=True)
         default_channel = {"toggle": False}
         self.config.register_channel(**default_channel)
+        # Session
+        self.session = aiohttp.ClientSession()
 
     def cog_unload(self):
-        self.driver.quit()
+        self.bot.loop.create_task(self.driver.quit())
+        self.bot.loop.create_task(self.session.close())
 
     @commands.group()
     @commands.guild_only()
@@ -48,12 +50,12 @@ class WowClassic(BaseCog):
         if item == "no match":
             await ctx.send(":x: Unable to find an item with that name.")
             return
-        image_path = str(cog_data_path(self) / f"{item['itemId']}.png")
-        url = f"https://classic.wowhead.com/item={item['itemId']}"
+        image_path = str(cog_data_path(self) / f"{item}.png")
+        url = f"https://classic.wowhead.com/item={item}"
         if path.isfile(image_path):
             await ctx.send(f"<{url}>", file=discord.File(image_path))
         else:
-            image_path = await self._generate_tooltip(item["itemId"])
+            image_path = await self._generate_tooltip(item)
             await ctx.send(f"<{url}>", file=discord.File(image_path))
 
     @classic.command()
@@ -78,15 +80,23 @@ class WowClassic(BaseCog):
                     item = await self._name_lookup(item)
                     if item == "no match":
                         continue
-                    image_path = str(cog_data_path(self) / f"{item['itemId']}.png")
-                    url = f"https://classic.wowhead.com/item={item['itemId']}"
+                    image_path = str(cog_data_path(self) / f"{item}.png")
+                    url = f"https://classic.wowhead.com/item={item}"
                     if path.isfile(image_path):
                         await message.channel.send(f"<{url}>", file=discord.File(image_path))
                     else:
-                        image_path = await self._generate_tooltip(item["itemId"])
+                        image_path = await self._generate_tooltip(item)
                         await message.channel.send(f"<{url}>", file=discord.File(image_path))
 
     async def _name_lookup(self, query):
+        async with self.session.get(f"https://api.nexushub.co/wow-classic/v1/search?query={query}&limit=1") as resp:
+            item = await resp.content.read()
+            try:
+                item_id = json.loads(item)[0]["itemId"]
+                return item_id
+            except IndexError:
+                return "no match"
+        
         file_path = bundled_data_path(self) / "data.json"
         with file_path.open("rt") as f:
             data = json.loads(f.read())
