@@ -24,6 +24,8 @@ class WowClassic(BaseCog):
         chrome_options.add_argument("--disable-extensions")
         chrome_options.add_argument("window-size=1920x1080")
         chrome_options.add_argument("--ignore-certificate-errors")
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
         self.driver = webdriver.Chrome(options=chrome_options, executable_path=binary_path)
         # Config
         self.config = Config.get_conf(self, identifier=3794294739172, force_registration=True)
