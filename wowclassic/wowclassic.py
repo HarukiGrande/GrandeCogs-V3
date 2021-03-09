@@ -128,8 +128,6 @@ class WowClassic(BaseCog):
         for item in datas:
             if item[0] == 0 and item[1] == 0 and item[2] == 0:
                 newData.append((0, 0, 0, 0))
-            elif item[0] == 1 and item[1] == 6 and item[2] == 26:
-                newData.append((26, 30, 48, 255))
             else:
                 newData.append(item)
         im.putdata(newData)
