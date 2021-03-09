@@ -4,7 +4,7 @@ from redbot.core.data_manager import bundled_data_path
 from redbot.core.data_manager import cog_data_path
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from chromedriver_py import binary_path
+import chromedriver_binary
 from fuzzywuzzy import process
 from bs4 import BeautifulSoup
 from PIL import Image
@@ -26,7 +26,7 @@ class WowClassic(BaseCog):
         chrome_options.add_argument("--ignore-certificate-errors")
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--disable-dev-shm-usage')
-        self.driver = webdriver.Chrome(options=chrome_options, executable_path=binary_path)
+        self.driver = webdriver.Chrome(options=chrome_options, executable_path=chromedriver_binary.chromedriver_filename)
         # Config
         self.config = Config.get_conf(self, identifier=3794294739172, force_registration=True)
         default_channel = {"toggle": False}
