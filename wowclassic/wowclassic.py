@@ -22,7 +22,6 @@ class WowClassic(BaseCog):
         chrome_options.add_argument("start-maximized")
         chrome_options.add_argument("disable-infobars")
         chrome_options.add_argument("--disable-extensions")
-        chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("window-size=1920x1080")
         chrome_options.add_argument("--ignore-certificate-errors")
         self.driver = webdriver.Chrome(options=chrome_options, executable_path=binary_path)
