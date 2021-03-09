@@ -1,10 +1,8 @@
 import discord, json, re, aiohttp, chromedriver_binary
 from redbot.core import commands, Config
-from redbot.core.data_manager import bundled_data_path
 from redbot.core.data_manager import cog_data_path
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from fuzzywuzzy import process
 from bs4 import BeautifulSoup
 from PIL import Image
 from os import path
@@ -95,19 +93,6 @@ class WowClassic(BaseCog):
                 item_id = json.loads(item)[0]["itemId"]
                 return item_id
             except IndexError:
-                return "no match"
-        
-        file_path = bundled_data_path(self) / "data.json"
-        with file_path.open("rt") as f:
-            data = json.loads(f.read())
-            data_names = [item.get("name") for item in data]
-            match = process.extractOne(query, data_names)[0]
-            perc = process.extractOne(query, data_names)[1]
-            if perc >= 75:
-                for item in data:
-                    if item["name"] == match:
-                        return item
-            else:
                 return "no match"
 
     async def _generate_tooltip(self, item_id):
